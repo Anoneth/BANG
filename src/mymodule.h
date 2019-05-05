@@ -52,7 +52,7 @@ private:
 
     void sendBroadcast(cMessage *msg);
 
-    unsigned int countOfConnections(unsigned int count);
+    unsigned int countOfConnections();
 
     cModule *findModule(std::string &name);
 

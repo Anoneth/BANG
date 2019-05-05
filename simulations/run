@@ -4,3 +4,4 @@ cd `dirname $0`
 # for shared lib, use: opp_run -l ../src/mymodel -n .:../src $*
 
 #mpirun -np 2 ./MyModel_dbg -m -n ../simulations:.:../../inet4/src:../../inet4/examples:../../inet4/tutorials:../../inet4/showcases --image-path=../../inet4/images -l ../../inet4/src/INET omnetpp.ini
+#/MyModel/src$ ../../../../MPI/Bin/mpiexec.exe -n 1 MyModel_dbg.exe -m -n ../simulations:.:../../inet4/src:../../inet4/examples:../../inet4/tutorials:../../inet4/showcases --image-path=../../inet4/images -l ../../inet4/src/INET omnetpp.ini
