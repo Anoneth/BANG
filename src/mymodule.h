@@ -25,7 +25,8 @@ private:
     std::vector<cDatarateChannel*> channels;
     unsigned int j;
     unsigned int countOfNodes;
-    unsigned int countOfSwitches;
+    unsigned int countOfRouters;
+    unsigned int hostsPerRouter;
     unsigned int tmp;
 
     std::vector<MyPair*> *connectionPairs;

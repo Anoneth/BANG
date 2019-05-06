@@ -49,11 +49,13 @@ void MyModule::doStage0() {
 
     countOfNodes = getSimulation()->getModule(1)->par("countOfNodes").intValue()
             - 1;
-    countOfSwitches =
-            getSimulation()->getModule(1)->par("countOfSwitches").intValue();
+    countOfRouters =
+            getSimulation()->getModule(1)->par("countOfRouters").intValue();
     tmp = countOfNodes;
 
-    addChannels(2 * (countOfSwitches - 1));
+    hostsPerRouter = getSimulation()->getModule(1)->par("hostsPerRouter").intValue();
+
+    addChannels(2 * (countOfRouters - 1));
     if (getSimulation()->getActiveEnvir()->getParsimNumPartitions() != 1
             || isMaster()) {
         createModules();
@@ -64,7 +66,7 @@ void MyModule::doStage1() {
     if (getSimulation()->getActiveEnvir()->getParsimNumPartitions() != 1
             || isMaster()) {
         j = 0;
-        for (unsigned int i = 0; i < countOfSwitches; i++) {
+        for (unsigned int i = 0; i < countOfRouters; i++) {
             std::string name = "switchNode";
             name.append(std::to_string(i % (countOfNodes + 1)));
             name.append("[" + std::to_string(i) + "]");
@@ -76,9 +78,9 @@ void MyModule::doStage1() {
             connectModules(routers[pair->left], routers[pair->right]);
         }
         hostCount = new std::vector<MyPair*>();
-        for (unsigned int i = 0; i < countOfSwitches; i++) {
+        for (unsigned int i = 0; i < countOfRouters; i++) {
             if (countConnections->at(i) == 1) {
-                int count = rand() % 10;
+                int count = hostsPerRouter;
                 hostCount->push_back(new MyPair(i, count));
                 addChannels(2 * count);
             }
@@ -99,7 +101,8 @@ void MyModule::doStage2() {
                 cModule *host = createModule(HOST, name.c_str());
                 connectModules(
                         findModule(
-                                std::string("[").append(std::to_string(hostCount->at(i)->left)).append(
+                                std::string("[").append(
+                                        std::to_string(hostCount->at(i)->left)).append(
                                         "]")), host);
             }
         }
@@ -195,15 +198,14 @@ void MyModule::createModules() {
     countConnections->push_back(1);
     countConnections->push_back(1);
     connectionPairs->push_back(new MyPair(1, 0));
-    for (unsigned int i = 2; i < countOfSwitches; i++) {
+    for (unsigned int i = 2; i < countOfRouters; i++) {
         unsigned int count = countConnections->size();
         countConnections->push_back(0);
         bool notConnected = false;
         unsigned int j = 0;
         while (!notConnected && j < count) {
             double c = uniform(0, 1);
-            double p = (double) countConnections->at(j)
-                    / countOfConnections();
+            double p = (double) countConnections->at(j) / countOfConnections();
             if (c < p) {
                 notConnected = true;
                 connectModules(i, j);

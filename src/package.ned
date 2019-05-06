@@ -25,8 +25,9 @@ network MyNetwork
 {
     parameters:
         int countOfNodes = default(2);
-        int countOfSwitches = default(10);
-        int hostsPerSwitch = default(10);
+        int countOfRouters = default(10);
+        int hostsPerRouter = default(10);
+        int rndSeed = default(2122);
     submodules:
         configurator: Ipv4NetworkConfigurator;
         myModules[countOfNodes]: MyModule;
