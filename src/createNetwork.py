@@ -4,6 +4,10 @@ import random
 countOfNodes = int(sys.argv[1])
 countOfRouters = int(sys.argv[2])
 hostPerRouter = int(sys.argv[3])
+nedFileName = sys.argv[4]
+packageName = sys.argv[5]
+networkName = sys.argv[6]
+iniFileName = sys.argv[7]
 
 connections = []
 
@@ -81,4 +85,18 @@ printConnections()
 outFile.write("}")
 
 outFile.close()
+
+iniFile = open(sys.argv[7], "w")
+iniFile.write("[General]\n")
+iniFile.write("network = " + sys.argv[5] + "." + sys.argv[6])
+iniFile.write("\n\n")
+
+iniFile.write("parallel-simulation = true\n")
+iniFile.write("parsim-communications-class = \"cMPICommunications\"\n")
+iniFile.write("parsim-synchronization-class = \"cNullMessageProtocol\"\n\n")
+
+iniFile.write("**configurator.partition-id = 0\n")
+
+for i in range(countOfNodes):
+    iniFile.write("**node" + str(i) + "*.partition-id = " + str(i) + "\n")
 
