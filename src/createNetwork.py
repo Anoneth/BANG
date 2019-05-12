@@ -1,20 +1,21 @@
+import sys
 import random
 
-countOfNodes = 4
-countOfRouters = 20
-hostPerRouter = 5
+countOfNodes = int(sys.argv[1])
+countOfRouters = int(sys.argv[2])
+hostPerRouter = int(sys.argv[3])
 
 connections = []
 
-outFile = open("simpleNetwork.ned", "w")
-outFile.write("package mymodel;\n\n")
+outFile = open(sys.argv[4], "w")
+outFile.write("package " + sys.argv[5] + ";\n\n")
 outFile.write("import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;\n")
 outFile.write("import inet.node.ethernet.Eth100M;\n")
 outFile.write("import inet.node.inet.Router;\n")
 outFile.write("import inet.node.inet.StandardHost;\n")
 outFile.write("\n\n")
-outFile.write("network SimpleNetwork\n")
-outFile.write("{\n")
+outFile.write("network " + sys.argv[6])
+outFile.write("\n{\n")
 outFile.write("\tsubmodules:\n")
 outFile.write("\t\tconfigurator: Ipv4NetworkConfigurator;\n")
 
@@ -46,8 +47,8 @@ def printConnections():
 
 
 routers = []
-routers.append("node" + str(0 % countOfNodes) + "router" + str(0))
 routers.append("node" + str(1 % countOfNodes) + "router" + str(1))
+routers.append("node" + str(0 % countOfNodes) + "router" + str(0))
 createConnection(routers[0], routers[1])
 
 for i in range(2, countOfRouters):
@@ -57,7 +58,7 @@ for i in range(2, countOfRouters):
     notConnected = True
     while notConnected and j < len(routers):
         rnd = random.uniform(0, 1)
-        p = countConnections(routers[j]) / (2 * len(connections))
+        p = float(countConnections(routers[j])) / (2 * len(connections))
         if (rnd < p):
             createConnection(name, routers[j])
             notConnected = False
