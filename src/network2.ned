@@ -7,8 +7,14 @@ import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 //
 // TODO documentation
 //
+simple MyModule
+{
+    gates:
+        input in[];
+        output out[];
+}
 
-network My2Network
+network MyNetwork
 {
     parameters:
         int countOfNodes = default(1);
@@ -16,7 +22,7 @@ network My2Network
         int hostsPerRouter = default(10);
         int rndSeed = default(2122);
     submodules:
-        configurator: Ipv4NetworkConfigurator;
+        configurator[countOfNodes]: Ipv4NetworkConfigurator;
         myModules[countOfNodes]: MyModule;
     connections:
         for i=1..countOfNodes - 1 {

@@ -1,0 +1,485 @@
+file 18391 1558633139                                           
+version 2
+run General-0-20190523-21:38:48-17890
+attr configname General
+attr datetime 20190523-21:38:48
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network mymodel.SimpleNetwork
+attr processid 17890
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **host*.numApps 1
+param **host*.app[0].typename "\"UdpBasicApp\""
+param **host*.app[0].localPort -1
+param **host*.app[0].sendInterval 1s
+param **host*.app[0].messageLength 1000B
+param **host*.app[0].stopTime 100s
+param **host*.app[0].destAddresses "\"server\""
+param **host*.app[0].destPort 32344
+param **server.numApps 1
+param **server.app[0].typename "\"UdpEchoApp\""
+param **server.app[0].localPort 32344
+
+vector 0 SimpleNetwork.node1router1host0.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 1 SimpleNetwork.node1router1host1.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 2 SimpleNetwork.node1router1host2.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 3 SimpleNetwork.node1router1host3.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 4 SimpleNetwork.node1router1host4.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 5 SimpleNetwork.node1router1host5.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 6 SimpleNetwork.node1router1host6.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 7 SimpleNetwork.node1router1host7.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 8 SimpleNetwork.node1router3host0.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 9 SimpleNetwork.node1router3host1.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 10 SimpleNetwork.node1router3host2.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 11 SimpleNetwork.node1router3host3.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 12 SimpleNetwork.node1router3host4.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 13 SimpleNetwork.node1router3host5.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 14 SimpleNetwork.node1router3host6.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 15 SimpleNetwork.node1router3host7.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 16 SimpleNetwork.node1router5host0.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 17 SimpleNetwork.node1router5host1.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 18 SimpleNetwork.node1router5host2.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 19 SimpleNetwork.node1router5host3.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 20 SimpleNetwork.node1router5host4.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 21 SimpleNetwork.node1router5host5.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 22 SimpleNetwork.node1router5host6.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 23 SimpleNetwork.node1router5host7.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 24 SimpleNetwork.node1router7host0.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 25 SimpleNetwork.node1router7host1.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 26 SimpleNetwork.node1router7host2.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 27 SimpleNetwork.node1router7host3.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 28 SimpleNetwork.node1router7host4.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 29 SimpleNetwork.node1router7host5.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 30 SimpleNetwork.node1router7host6.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 31 SimpleNetwork.node1router7host7.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 32 SimpleNetwork.node0router8host0.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 33 SimpleNetwork.node0router8host1.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 34 SimpleNetwork.node0router8host2.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 35 SimpleNetwork.node0router8host3.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 36 SimpleNetwork.node0router8host4.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 37 SimpleNetwork.node0router8host5.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 38 SimpleNetwork.node0router8host6.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 39 SimpleNetwork.node0router8host7.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 40 SimpleNetwork.node1router9host0.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 41 SimpleNetwork.node1router9host1.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 42 SimpleNetwork.node1router9host2.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 43 SimpleNetwork.node1router9host3.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 44 SimpleNetwork.node1router9host4.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 45 SimpleNetwork.node1router9host5.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 46 SimpleNetwork.node1router9host6.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 47 SimpleNetwork.node1router9host7.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 48 SimpleNetwork.node1router1host0.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 49 SimpleNetwork.node1router1host1.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 50 SimpleNetwork.node1router1host2.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 51 SimpleNetwork.node1router1host3.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 52 SimpleNetwork.node1router1host4.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 53 SimpleNetwork.node1router1host5.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 54 SimpleNetwork.node1router1host6.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 55 SimpleNetwork.node1router1host7.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 56 SimpleNetwork.node1router3host0.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 57 SimpleNetwork.node1router3host1.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 58 SimpleNetwork.node1router3host2.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 59 SimpleNetwork.node1router3host3.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 60 SimpleNetwork.node1router3host4.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 61 SimpleNetwork.node1router3host5.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 62 SimpleNetwork.node1router3host6.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 63 SimpleNetwork.node1router3host7.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 64 SimpleNetwork.node1router5host0.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 65 SimpleNetwork.node1router5host1.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 66 SimpleNetwork.node1router5host2.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 67 SimpleNetwork.node1router5host3.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 68 SimpleNetwork.node1router5host4.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 69 SimpleNetwork.node1router5host5.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 70 SimpleNetwork.node1router5host6.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 71 SimpleNetwork.node1router5host7.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 72 SimpleNetwork.node1router7host0.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 73 SimpleNetwork.node1router7host1.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 74 SimpleNetwork.node1router7host2.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 75 SimpleNetwork.node1router7host3.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 76 SimpleNetwork.node1router7host4.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 77 SimpleNetwork.node1router7host5.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 78 SimpleNetwork.node1router7host6.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 79 SimpleNetwork.node1router7host7.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 80 SimpleNetwork.node0router8host0.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 81 SimpleNetwork.node0router8host1.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 82 SimpleNetwork.node0router8host2.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 83 SimpleNetwork.node0router8host3.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 84 SimpleNetwork.node0router8host4.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 85 SimpleNetwork.node0router8host5.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 86 SimpleNetwork.node0router8host6.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 87 SimpleNetwork.node0router8host7.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 88 SimpleNetwork.node1router9host0.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 89 SimpleNetwork.node1router9host1.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 90 SimpleNetwork.node1router9host2.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+0	17205 11 3 3 1 1 1 1000 1000 1000 1000000
+1	17216 11 4 4 1 1 1 1000 1000 1000 1000000
+2	17227 11 5 5 1 1 1 1000 1000 1000 1000000
+3	17238 11 6 6 1 1 1 1000 1000 1000 1000000
+4	17249 11 7 7 1 1 1 1000 1000 1000 1000000
+5	17260 11 8 8 1 1 1 1000 1000 1000 1000000
+6	17271 11 9 9 1 1 1 1000 1000 1000 1000000
+7	17282 12 10 10 1 1 1 1000 1000 1000 1000000
+8	17294 12 11 11 1 1 1 1000 1000 1000 1000000
+9	17306 12 12 12 1 1 1 1000 1000 1000 1000000
+10	17318 13 13 13 1 1 1 1000 1000 1000 1000000
+11	17331 13 14 14 1 1 1 1000 1000 1000 1000000
+12	17344 13 15 15 1 1 1 1000 1000 1000 1000000
+13	17357 13 16 16 1 1 1 1000 1000 1000 1000000
+14	17370 13 17 17 1 1 1 1000 1000 1000 1000000
+15	17383 13 18 18 1 1 1 1000 1000 1000 1000000
+16	17396 13 19 19 1 1 1 1000 1000 1000 1000000
+17	17409 13 20 20 1 1 1 1000 1000 1000 1000000
+18	17422 13 21 21 1 1 1 1000 1000 1000 1000000
+19	17435 13 22 22 1 1 1 1000 1000 1000 1000000
+20	17448 13 23 23 1 1 1 1000 1000 1000 1000000
+21	17461 13 24 24 1 1 1 1000 1000 1000 1000000
+22	17474 13 25 25 1 1 1 1000 1000 1000 1000000
+23	17487 13 26 26 1 1 1 1000 1000 1000 1000000
+24	17500 13 27 27 1 1 1 1000 1000 1000 1000000
+25	17513 13 28 28 1 1 1 1000 1000 1000 1000000
+26	17526 13 29 29 1 1 1 1000 1000 1000 1000000
+27	17539 13 30 30 1 1 1 1000 1000 1000 1000000
+28	17552 13 31 31 1 1 1 1000 1000 1000 1000000
+29	17565 13 32 32 1 1 1 1000 1000 1000 1000000
+30	17578 13 33 33 1 1 1 1000 1000 1000 1000000
+31	17591 13 34 34 1 1 1 1000 1000 1000 1000000
+32	17604 13 35 35 1 1 1 1000 1000 1000 1000000
+33	17617 13 36 36 1 1 1 1000 1000 1000 1000000
+34	17630 13 37 37 1 1 1 1000 1000 1000 1000000
+35	17643 13 38 38 1 1 1 1000 1000 1000 1000000
+36	17656 13 39 39 1 1 1 1000 1000 1000 1000000
+37	17669 13 40 40 1 1 1 1000 1000 1000 1000000
+38	17682 13 41 41 1 1 1 1000 1000 1000 1000000
+39	17695 13 42 42 1 1 1 1000 1000 1000 1000000
+40	17708 13 43 43 1 1 1 1000 1000 1000 1000000
+41	17721 13 44 44 1 1 1 1000 1000 1000 1000000
+42	17734 13 45 45 1 1 1 1000 1000 1000 1000000
+43	17747 13 46 46 1 1 1 1000 1000 1000 1000000
+44	17760 13 47 47 1 1 1 1000 1000 1000 1000000
+45	17773 13 48 48 1 1 1 1000 1000 1000 1000000
+46	17786 13 49 49 1 1 1 1000 1000 1000 1000000
+47	17799 13 50 50 1 1 1 1000 1000 1000 1000000
+48	17812 13 52 52 1 1 1 1008 1008 1008 1016064
+49	17825 13 54 54 1 1 1 1008 1008 1008 1016064
+50	17838 13 56 56 1 1 1 1008 1008 1008 1016064
+51	17851 13 58 58 1 1 1 1008 1008 1008 1016064
+52	17864 13 60 60 1 1 1 1008 1008 1008 1016064
+53	17877 13 62 62 1 1 1 1008 1008 1008 1016064
+54	17890 13 64 64 1 1 1 1008 1008 1008 1016064
+55	17903 13 66 66 1 1 1 1008 1008 1008 1016064
+56	17916 13 68 68 1 1 1 1008 1008 1008 1016064
+57	17929 13 70 70 1 1 1 1008 1008 1008 1016064
+58	17942 13 72 72 1 1 1 1008 1008 1008 1016064
+59	17955 13 74 74 1 1 1 1008 1008 1008 1016064
+60	17968 13 76 76 1 1 1 1008 1008 1008 1016064
+61	17981 13 78 78 1 1 1 1008 1008 1008 1016064
+62	17994 13 80 80 1 1 1 1008 1008 1008 1016064
+63	18007 13 82 82 1 1 1 1008 1008 1008 1016064
+64	18020 13 84 84 1 1 1 1008 1008 1008 1016064
+65	18033 13 86 86 1 1 1 1008 1008 1008 1016064
+66	18046 13 88 88 1 1 1 1008 1008 1008 1016064
+67	18059 13 90 90 1 1 1 1008 1008 1008 1016064
+68	18072 13 92 92 1 1 1 1008 1008 1008 1016064
+69	18085 13 94 94 1 1 1 1008 1008 1008 1016064
+70	18098 13 96 96 1 1 1 1008 1008 1008 1016064
+71	18111 13 98 98 1 1 1 1008 1008 1008 1016064
+72	18124 14 100 100 1 1 1 1008 1008 1008 1016064
+73	18138 14 102 102 1 1 1 1008 1008 1008 1016064
+74	18152 14 104 104 1 1 1 1008 1008 1008 1016064
+75	18166 14 106 106 1 1 1 1008 1008 1008 1016064
+76	18180 14 108 108 1 1 1 1008 1008 1008 1016064
+77	18194 14 110 110 1 1 1 1008 1008 1008 1016064
+78	18208 14 112 112 1 1 1 1008 1008 1008 1016064
+79	18222 14 114 114 1 1 1 1008 1008 1008 1016064
+80	18236 14 116 116 1 1 1 1008 1008 1008 1016064
+81	18250 14 118 118 1 1 1 1008 1008 1008 1016064
+82	18264 14 120 120 1 1 1 1008 1008 1008 1016064
+83	18278 14 122 122 1 1 1 1008 1008 1008 1016064
+84	18292 14 124 124 1 1 1 1008 1008 1008 1016064
+85	18306 14 126 126 1 1 1 1008 1008 1008 1016064
+86	18320 14 128 128 1 1 1 1008 1008 1008 1016064
+87	18334 14 130 130 1 1 1 1008 1008 1008 1016064
+88	18348 14 132 132 1 1 1 1008 1008 1008 1016064
+89	18362 14 134 134 1 1 1 1008 1008 1008 1016064
+90	18376 14 136 136 1 1 1 1008 1008 1008 1016064
+

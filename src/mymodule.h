@@ -3,7 +3,7 @@
 #include <omnetpp.h>
 #include <omnetpp/ccomponenttype.h>
 
-#include "SimpleMessage_m.h"
+#include "MyPair.h"
 
 using namespace omnetpp;
 
@@ -13,7 +13,6 @@ public:
 protected:
     virtual int numInitStages() const override { return 15; }
     virtual void initialize(int stage) override;
-    virtual void handleMessage(cMessage *msg) override;
     virtual void finish() override;
 
 private:
@@ -23,7 +22,7 @@ private:
     std::vector<cModule*> routers;
     std::vector<cModule*> hosts;
     std::vector<cDatarateChannel*> channels;
-    unsigned int j;
+    unsigned int gateIt;
     unsigned int countOfNodes;
     unsigned int countOfRouters;
     unsigned int hostsPerRouter;
@@ -36,9 +35,7 @@ private:
     void doStage0();
     void doStage1();
     void doStage2();
-
-    bool isMaster();
-    bool endWith(std::string string, std::string &end);
+    void doStage3();
 
     cModule *createModule(TYPE type, const char *name);
     void addChannels(int count);
@@ -47,11 +44,6 @@ private:
     void connectModules(unsigned int left, unsigned int right);
 
     void createModules();
-
-    void handleMessageModule1(cMessage *msg);
-    void handleMessageModule2(cMessage *msg);
-
-    void sendBroadcast(cMessage *msg);
 
     unsigned int countOfConnections();
 

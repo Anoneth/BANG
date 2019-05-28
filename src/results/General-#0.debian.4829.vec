@@ -1,0 +1,80 @@
+version 2
+run General-0-20190528-21:22:50-4829
+attr configname General
+attr datetime 20190528-21:22:50
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network mymodel.My2Network
+attr processid 4829
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param *.countOfNodes 2
+param **host*.numApps 1
+param **host*.app[0].typename "\"UdpBasicApp\""
+param **host*.app[0].localPort 32344
+param **host*.app[0].messageLength 1000B
+param **host*.app[0].stopTime 100s
+param **host*.app[0].destAddresses "moduleListByPath(\"**host*\")"
+param **host*.app[0].destPort 32344
+param **host*.app[0].sendInterval 0.4s
+param **server.numApps 1
+param **server.app[0].typename "\"UdpEchoApp\""
+param **server.app[0].localPort 32344
+
+vector 0 My2Network.router0node0host0.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 1 My2Network.router0node0host1.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 2 My2Network.router0node0host2.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 3 My2Network.router0node0host3.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 4 My2Network.router0node0host4.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 5 My2Network.router0node0host5.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 6 My2Network.router0node0host6.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 7 My2Network.router0node0host7.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 8 My2Network.router0node0host8.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 9 My2Network.router0node0host9.app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+0	1	0.4	1000
+1	2	0.4	1000
+2	3	0.4	1000
+3	4	0.4	1000
+4	5	0.4	1000
+5	6	0.4	1000
+6	7	0.4	1000
+7	8	0.4	1000
+8	9	0.4	1000
+9	10	0.4	1000
+

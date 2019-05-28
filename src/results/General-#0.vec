@@ -1,0 +1,30 @@
+version 2
+run General-0-20190528-21:09:53-4167
+attr configname General
+attr datetime 20190528-21:09:53
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network mymodel.My2Network
+attr processid 4167
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param *.countOfNodes 1
+param **host*.numApps 1
+param **host*.app[0].typename "\"UdpBasicApp\""
+param **host*.app[0].localPort 32344
+param **host*.app[0].messageLength 1000B
+param **host*.app[0].stopTime 100s
+param **host*.app[0].destAddresses "moduleListByPath(\"**host*\")"
+param **host*.app[0].destPort 32344
+param **host*.app[0].sendInterval 0.4s
+param **server.numApps 1
+param **server.app[0].typename "\"UdpEchoApp\""
+param **server.app[0].localPort 32344
+
+

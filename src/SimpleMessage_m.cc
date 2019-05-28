@@ -134,18 +134,16 @@ void doParsimArrayUnpacking(omnetpp::cCommBuffer *b, T *t, int n)
 }
 
 // Default rule to prevent compiler from choosing base class' doParsimPacking() function
-void doParsimPacking(omnetpp::cCommBuffer * buffer, const MyPair &pair)
+template<typename T>
+void doParsimPacking(omnetpp::cCommBuffer *, const T& t)
 {
-    doParsimPacking(buffer, pair.left);
-    doParsimPacking(buffer, pair.right);
-    //throw omnetpp::cRuntimeError("Parsim error: No doParsimPacking() function for type %s", omnetpp::opp_typename(typeid(t)));
+    throw omnetpp::cRuntimeError("Parsim error: No doParsimPacking() function for type %s", omnetpp::opp_typename(typeid(t)));
 }
 
-void doParsimUnpacking(omnetpp::cCommBuffer * buffer, MyPair &pair)
+template<typename T>
+void doParsimUnpacking(omnetpp::cCommBuffer *, T& t)
 {
-    doParsimUnpacking(buffer, pair.left);
-    doParsimUnpacking(buffer, pair.right);
-    //throw omnetpp::cRuntimeError("Parsim error: No doParsimUnpacking() function for type %s", omnetpp::opp_typename(typeid(t)));
+    throw omnetpp::cRuntimeError("Parsim error: No doParsimUnpacking() function for type %s", omnetpp::opp_typename(typeid(t)));
 }
 
 }  // namespace omnetpp
