@@ -1,14 +1,12 @@
 #include <string.h>
 #include <vector>
 #include <omnetpp.h>
-#include <omnetpp/ccomponenttype.h>
-
-#include "MyPair.h"
 
 using namespace omnetpp;
 
 class MyModule: public cSimpleModule {
 public:
+    MyModule();
     ~MyModule();
 protected:
     virtual int numInitStages() const override { return 15; }
@@ -17,20 +15,23 @@ protected:
 
 private:
     enum TYPE {
-        ROUTER, HOST
+        ROUTER, HOST, CONFIGURATOR
     };
-    std::vector<cModule*> routers;
-    std::vector<cModule*> hosts;
+
+    std::vector<cModule*> configurators;
+    std::vector<cModule*> *mods;
+
     std::vector<cDatarateChannel*> channels;
+
+    std::vector<int> *counts;
+
     unsigned int gateIt;
     unsigned int countOfNodes;
     unsigned int countOfRouters;
     unsigned int hostsPerRouter;
     unsigned int tmp;
 
-    std::vector<MyPair*> *connectionPairs;
-    std::vector<MyPair*> *hostCount;
-    std::vector<unsigned int> *countConnections;
+    bool **connections;
 
     void doStage0();
     void doStage1();
@@ -41,12 +42,8 @@ private:
     void addChannels(int count);
     void connectModules(cModule *f, cModule *s);
 
-    void connectModules(unsigned int left, unsigned int right);
-
     void createModules();
 
     unsigned int countOfConnections();
-
-    cModule *findModule(std::string &name);
 
 };

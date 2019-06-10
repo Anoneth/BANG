@@ -2,6 +2,26 @@
 
 Define_Module(MyModule);
 
+MyModule::MyModule() {
+    channels = std::vector<cDatarateChannel*>();
+    mods = new std::vector<cModule*>();
+
+    configurators = std::vector<cModule*>();
+
+    countOfRouters =
+            getSimulation()->getModule(1)->par("size").intValue();
+    tmp = countOfNodes;
+
+    counts = new std::vector<int>(countOfRouters, 0);
+
+    connections = new bool*[countOfRouters];
+    for (int i = 0; i < countOfRouters; i++) {
+        connections[i] = new bool[countOfRouters];
+        for (int j = 0; j < countOfRouters; j++)
+            connections[i][j] = false;
+    }
+}
+
 MyModule::~MyModule() {
     finish();
 }
@@ -16,6 +36,7 @@ void MyModule::finish() {
             delete channels[i];
     }
     channels.clear();
+    delete connections;
 }
 
 void MyModule::initialize(int stage) {
@@ -26,85 +47,51 @@ void MyModule::initialize(int stage) {
         doStage2();
         doStage3();
         break;
-    case 15:
-        doStage3();
-        break;
-    case 17:
-        doStage2();
-        break;
     default:
         break;
     }
 }
 
 void MyModule::doStage0() {
-    channels = std::vector<cDatarateChannel*>();
-    routers = std::vector<cModule*>();
-    hosts = std::vector<cModule*>();
-
-    countOfNodes =
-            getSimulation()->getModule(1)->par("countOfNodes").intValue();
-
-    countOfRouters =
-            getSimulation()->getModule(1)->par("countOfRouters").intValue();
-    tmp = countOfNodes;
-
-    hostsPerRouter =
-            getSimulation()->getModule(1)->par("hostsPerRouter").intValue();
     createModules();
 }
 
 void MyModule::doStage1() {
     gateIt = 0;
-    for (unsigned int i = 0; i < countOfRouters; i++) {
-        std::string name = "router";
-        name.append(std::to_string(i));
-        name.append(std::string("node"));
-        name.append(std::to_string(i % countOfNodes));
-        createModule(ROUTER, name.c_str());
-    }
-    MyPair *pair;
-    for (unsigned int i = 0; i < connectionPairs->size(); i++) {
-        pair = connectionPairs->at(i);
-        connectModules(routers[pair->left], routers[pair->right]);
-    }
-    hostCount = new std::vector<MyPair*>();
-    for (unsigned int i = 0; i < countOfRouters; i++) {
-        //if (countConnections->at(i) == 1) {
-        int count = hostsPerRouter;
-        hostCount->push_back(new MyPair(i, count));
-        //}
+
+    for (int i = 0; i < countOfRouters; i++) {
+        std::string name;
+        if (counts->at(i) > 1) {
+            name = "router";
+            name.append(std::to_string(i));
+            createModule(ROUTER, name.c_str());
+        } else {
+            name = "host";
+            name.append(std::to_string(i));
+            createModule(HOST, name.c_str());
+        }
     }
 }
 
 void MyModule::doStage2() {
-    int n = 0;
-    for (unsigned int i = 0; i < hostCount->size(); i++) {
-        std::string baseName = "router";
-        MyPair *pair = hostCount->at(i);
-        baseName.append(std::to_string(pair->left));
-        baseName.append(std::string("node"));
-        baseName.append(std::to_string(pair->left % countOfNodes));
-        for (int j = 0; j < pair->right; j++) {
-            std::string name = baseName + std::string("host")
-                    + std::to_string(n++);
-            cModule *host = createModule(HOST, name.c_str());
-            connectModules(findModule(baseName), host);
-        }
-    }
+    for (int i = 0; i < countOfRouters; i++)
+        for (int j = i; j < countOfRouters; j++)
+            if (connections[i][j])
+                connectModules(mods->at(i), mods->at(j));
 }
 
 void MyModule::doStage3() {
     for (int t = 0; t < 15; t++) {
-        for (auto i : routers) {
-            i->callInitialize(t);
-        }
 
-        for (auto i : hosts) {
+        for (auto i : configurators) {
             i->callInitialize(t);
         }
 
         for (auto i : channels) {
+            i->callInitialize(t);
+        }
+
+        for (auto i : *mods) {
             i->callInitialize(t);
         }
     }
@@ -122,34 +109,30 @@ void MyModule::addChannels(int count) {
     }
 }
 
-void MyModule::connectModules(unsigned int left, unsigned int right) {
-    connectionPairs->push_back(new MyPair(left, right));
-    countConnections->at(left)++;countConnections
-    ->at(right)++;}
-
 void MyModule::createModules() {
-    unsigned int gateCount = 0;
-    connectionPairs = new std::vector<MyPair*>();
-    countConnections = new std::vector<unsigned int>();
-    gateCount += 2;
-    countConnections->push_back(1);
-    countConnections->push_back(1);
-    connectionPairs->push_back(new MyPair(1, 0));
-    for (unsigned int i = 2; i < countOfRouters; i++) {
-        unsigned int count = countConnections->size();
-        countConnections->push_back(0);
-        unsigned int j = 0;
-        while (j < count) {
+    connections[0][1] = true;
+    connections[1][0] = true;
+    int count = 2;
+    counts->at(0) = 1;
+    counts->at(1) = 1;
+    for (int i = 2; i < countOfRouters; i++) {
+        bool isConnected = false;
+        int j = 0;
+        for (j = 0; j < i; j++) {
             double c = uniform(0, 1);
-            double p = (double) countConnections->at(j) / countOfConnections();
+            double p = (double) counts->at(j) / count;
             if (c < p) {
-                connectModules(i, j);
-                gateCount += 2;
+                isConnected = true;
+                connections[j][i] = true;
+                connections[i][j] = true;
+                counts->at(i) += 1;
+                counts->at(j) += 1;
+                count++;
             }
-            j++;
         }
-        if (j == count)
-            connectModules(i, 0);
+        if (!isConnected) {
+            i--;
+        }
     }
 }
 
@@ -163,6 +146,10 @@ cModule* MyModule::createModule(TYPE type, const char *name) {
     case HOST:
         moduleType = cModuleType::get("inet.node.inet.StandardHost");
         break;
+    case CONFIGURATOR:
+        moduleType = cModuleType::get(
+                "inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator");
+        break;
     default:
         moduleType = nullptr;
         break;
@@ -170,19 +157,26 @@ cModule* MyModule::createModule(TYPE type, const char *name) {
 
     mod = moduleType->create(name, getSimulation()->getModule(1));
 
+    mod->finalizeParameters();
+
     switch (type) {
     case ROUTER:
-        routers.push_back(mod);
+        //routers.push_back(mod);
+        mod->setGateSize("ethg", 1);
+        mods->push_back(mod);
         break;
     case HOST:
-        hosts.push_back(mod);
+        //hosts.push_back(mod);
+        mod->setGateSize("ethg", 1);
+        mods->push_back(mod);
+        break;
+    case CONFIGURATOR:
+        configurators.push_back(mod);
         break;
     default:
         break;
     }
 
-    mod->finalizeParameters();
-    mod->setGateSize("ethg", 1);
     mod->buildInside();
     return mod;
 }
@@ -205,16 +199,9 @@ void MyModule::connectModules(cModule *f, cModule *s) {
 
 unsigned int MyModule::countOfConnections() {
     unsigned int res = 0;
-    for (unsigned int i : *countConnections) {
-        res += i;
-    }
+    for (int i = 0; i < countOfRouters; i++)
+        for (int j = 0; j < countOfRouters; j++)
+            if (connections[i][j])
+                res++;
     return res;
-}
-
-cModule* MyModule::findModule(std::string &name) {
-    for (unsigned int i = 0; i < routers.size(); i++) {
-        if (strcmp(routers[i]->getFullName(), name.c_str()) == 0)
-            return routers[i];
-    }
-    return 0;
 }
