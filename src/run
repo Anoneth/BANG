@@ -1,1 +1,1 @@
-mpirun -np 2 ./MyModel_dbg -m -n ../simulations:.:../../inet4/src:../../inet4/examples:../../inet4/tutorials:../../inet4/showcases --image-path=../../inet4/images -l ../../inet4/src/INET omnetpp.ini
+./MyModel_dbg -m -n ../simulations:.:../../inet4/src:../../inet4/examples:../../inet4/tutorials:../../inet4/showcases --image-path=../../inet4/images -l ../../inet4/src/INET testparallel.ini

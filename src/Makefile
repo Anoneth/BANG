@@ -1,12 +1,12 @@
 #
-# OMNeT++/OMNEST Makefile for MyModel
+# OMNeT++/OMNEST Makefile for BANG
 #
 # This file was generated with the command:
 #  opp_makemake -f --deep -KINET4_PROJ=../../inet4 -DINET_IMPORT -L$$\(INET4_PROJ\)/src -lINET$$\(D\)
 #
 
 # Name of target to be created (-o option)
-TARGET = MyModel$(D)$(EXE_SUFFIX)
+TARGET = BANG$(D)$(EXE_SUFFIX)
 TARGET_DIR = .
 
 # User interface (uncomment one) (-u option)
@@ -30,11 +30,10 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/mymodule.o $O/SimpleMessage_m.o
+OBJS = $O/bangmodule.o
 
 # Message files
-MSGFILES = \
-    SimpleMessage.msg
+MSGFILES =
 
 # SM files
 SMFILES =

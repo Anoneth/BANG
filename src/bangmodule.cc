@@ -1,46 +1,13 @@
-#include "mymodule.h"
+#include "bangmodule.h"
 
-Define_Module(MyModule);
+Define_Module(BANGModule);
 
-MyModule::~MyModule() {
-    finish();
-}
-
-void MyModule::finish() {
-    cGate *gate;
-    for (unsigned int i = 0; i < channels.size(); i++) {
-        gate = channels[i]->getSourceGate();
-        if (gate != nullptr)
-            gate->disconnect();
-        else
-            delete channels[i];
-    }
-    channels.clear();
-}
-
-void MyModule::initialize(int stage) {
-    switch (stage) {
-    case 14:
-        doStage0();
-        doStage1();
-        doStage2();
-        doStage3();
-        break;
-    case 15:
-        doStage3();
-        break;
-    case 17:
-        doStage2();
-        break;
-    default:
-        break;
-    }
-}
-
-void MyModule::doStage0() {
+BANGModule::BANGModule() {
     channels = std::vector<cDatarateChannel*>();
-    routers = std::vector<cModule*>();
-    hosts = std::vector<cModule*>();
+    connections = new std::vector<std::vector<int>*>();
+    mods = new std::vector<cModule*>();
+
+    configurators = std::vector<cModule*>();
 
     countOfNodes =
             getSimulation()->getModule(1)->par("countOfNodes").intValue();
@@ -51,66 +18,116 @@ void MyModule::doStage0() {
 
     hostsPerRouter =
             getSimulation()->getModule(1)->par("hostsPerRouter").intValue();
+}
+
+BANGModule::~BANGModule() {
+    finish();
+}
+
+void BANGModule::finish() {
+    cGate *gate;
+    for (unsigned int i = 0; i < channels.size(); i++) {
+        gate = channels[i]->getSourceGate();
+        if (gate != nullptr)
+            gate->disconnect();
+        else
+            delete channels[i];
+    }
+    channels.clear();
+    delete connections;
+}
+
+void BANGModule::initialize(int stage) {
+    switch (stage) {
+    case 14:
+        doStage0();
+        doStage1();
+        doStage2();
+        doStage3();
+        break;
+    default:
+        break;
+    }
+}
+
+void BANGModule::doStage0() {
     createModules();
+    int c = getSimulation()->getActiveEnvir()->getParsimNumPartitions();
+    if (c == 0) {
+        createModule(CONFIGURATOR, "configurator");
+    }
+    for (int i = 0; i < c; i++) {
+        std::string name = "configurator";
+        name.append(
+                std::to_string(
+                        getSimulation()->getActiveEnvir()->getParsimProcId()));
+        createModule(CONFIGURATOR, name.c_str());
+    }
 }
 
-void MyModule::doStage1() {
+void BANGModule::doStage1() {
     gateIt = 0;
-    for (unsigned int i = 0; i < countOfRouters; i++) {
-        std::string name = "router";
-        name.append(std::to_string(i));
-        name.append(std::string("node"));
-        name.append(std::to_string(i % countOfNodes));
-        createModule(ROUTER, name.c_str());
-    }
-    MyPair *pair;
-    for (unsigned int i = 0; i < connectionPairs->size(); i++) {
-        pair = connectionPairs->at(i);
-        connectModules(routers[pair->left], routers[pair->right]);
-    }
-    hostCount = new std::vector<MyPair*>();
-    for (unsigned int i = 0; i < countOfRouters; i++) {
-        //if (countConnections->at(i) == 1) {
-        int count = hostsPerRouter;
-        hostCount->push_back(new MyPair(i, count));
-        //}
-    }
-}
-
-void MyModule::doStage2() {
-    int n = 0;
-    for (unsigned int i = 0; i < hostCount->size(); i++) {
-        std::string baseName = "router";
-        MyPair *pair = hostCount->at(i);
-        baseName.append(std::to_string(pair->left));
-        baseName.append(std::string("node"));
-        baseName.append(std::to_string(pair->left % countOfNodes));
-        for (int j = 0; j < pair->right; j++) {
-            std::string name = baseName + std::string("host")
-                    + std::to_string(n++);
-            cModule *host = createModule(HOST, name.c_str());
-            connectModules(findModule(baseName), host);
+    for (unsigned int i = 0; i < connections->size(); i++) {
+        std::string name;
+        if (connections->at(i)->size() > 1) {
+            if (getSimulation()->getActiveEnvir()->getParsimNumPartitions()
+                    > 1) {
+                name = "node";
+                name.append(std::to_string(i % countOfNodes));
+            } else
+                name = "router";
+            name.append(std::to_string(i));
+            createModule(ROUTER, name.c_str());
+        } else {
+            if (getSimulation()->getActiveEnvir()->getParsimNumPartitions()
+                    > 1) {
+                name = "node";
+                name.append(std::to_string(i % countOfNodes));
+            } else
+                name = "host";
+            name.append(std::to_string(i));
+            createModule(HOST, name.c_str());
         }
     }
 }
 
-void MyModule::doStage3() {
+void BANGModule::doStage2() {
+    for (unsigned int i = 0; i < countOfRouters; i++) {
+        for (unsigned int j = 0; j < connections->at(i)->size(); j++) {
+            int right = connections->at(i)->at(j);
+            //printf("from %i\tto %i\n", i, right);
+            if (i < right)
+                connectModules(mods->at(i), mods->at(right));
+        }
+    }
+}
+
+void BANGModule::doStage3() {
     for (int t = 0; t < 15; t++) {
-        for (auto i : routers) {
-            i->callInitialize(t);
-        }
+        //configurator->callInitialize(t);
+        /*for (auto i : routers) {
+         i->callInitialize(t);
+         }
 
-        for (auto i : hosts) {
+         for (auto i : hosts) {
+         i->callInitialize(t);
+         }*/
+
+        for (auto i : configurators) {
             i->callInitialize(t);
         }
 
         for (auto i : channels) {
             i->callInitialize(t);
         }
+
+        for (auto i : *mods) {
+            i->callInitialize(t);
+        }
     }
 }
 
-void MyModule::addChannels(int count) {
+void BANGModule::addChannels(int count) {
     cChannelType *channelType = cChannelType::get("inet.node.ethernet.Eth100M");
     for (int i = 0; i < count; i++) {
         cDatarateChannel *ch = channelType->createDatarateChannel("channel");
@@ -122,38 +139,33 @@ void MyModule::addChannels(int count) {
     }
 }
 
-void MyModule::connectModules(unsigned int left, unsigned int right) {
-    connectionPairs->push_back(new MyPair(left, right));
-    countConnections->at(left)++;countConnections
-    ->at(right)++;}
-
-void MyModule::createModules() {
-    unsigned int gateCount = 0;
-    connectionPairs = new std::vector<MyPair*>();
-    countConnections = new std::vector<unsigned int>();
-    gateCount += 2;
-    countConnections->push_back(1);
-    countConnections->push_back(1);
-    connectionPairs->push_back(new MyPair(1, 0));
+void BANGModule::createModules() {
+    connections->push_back(new std::vector<int>());
+    connections->push_back(new std::vector<int>());
+    connections->at(0)->push_back(1);
+    connections->at(1)->push_back(0);
     for (unsigned int i = 2; i < countOfRouters; i++) {
-        unsigned int count = countConnections->size();
-        countConnections->push_back(0);
-        unsigned int j = 0;
-        while (j < count) {
+        connections->push_back(new std::vector<int>());
+        bool isConnected = false;
+        for (unsigned int j = 0; (j < connections->size() - 1) && !isConnected;
+                j++) {
             double c = uniform(0, 1);
-            double p = (double) countConnections->at(j) / countOfConnections();
+            double p = (double) connections->at(j)->size()
+                    / countOfConnections();
             if (c < p) {
-                connectModules(i, j);
-                gateCount += 2;
+                //isConnected = true;
+                connections->at(j)->push_back(i);
+                connections->at(i)->push_back(j);
             }
-            j++;
         }
-        if (j == count)
-            connectModules(i, 0);
+        if (!isConnected) {
+            i--;
+            connections->pop_back();
+        }
     }
 }
 
-cModule* MyModule::createModule(TYPE type, const char *name) {
+cModule* BANGModule::createModule(TYPE type, const char *name) {
     cModule *mod;
     cModuleType *moduleType;
     switch (type) {
@@ -163,6 +175,10 @@ cModule* MyModule::createModule(TYPE type, const char *name) {
     case HOST:
         moduleType = cModuleType::get("inet.node.inet.StandardHost");
         break;
+    case CONFIGURATOR:
+        moduleType = cModuleType::get(
+                "inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator");
+        break;
     default:
         moduleType = nullptr;
         break;
@@ -170,24 +186,31 @@ cModule* MyModule::createModule(TYPE type, const char *name) {
 
     mod = moduleType->create(name, getSimulation()->getModule(1));
 
+    mod->finalizeParameters();
+
     switch (type) {
     case ROUTER:
-        routers.push_back(mod);
+        //routers.push_back(mod);
+        mod->setGateSize("ethg", 1);
+        mods->push_back(mod);
         break;
     case HOST:
-        hosts.push_back(mod);
+        //hosts.push_back(mod);
+        mod->setGateSize("ethg", 1);
+        mods->push_back(mod);
+        break;
+    case CONFIGURATOR:
+        configurators.push_back(mod);
         break;
     default:
         break;
     }
 
-    mod->finalizeParameters();
-    mod->setGateSize("ethg", 1);
     mod->buildInside();
     return mod;
 }
 
-void MyModule::connectModules(cModule *f, cModule *s) {
+void BANGModule::connectModules(cModule *f, cModule *s) {
     addChannels(2);
 
     int fc = f->gateSize("ethg");
@@ -203,18 +226,10 @@ void MyModule::connectModules(cModule *f, cModule *s) {
     s->gate("ethg$o", sc - 1)->connectTo(f->gate("ethg$i", fc - 1), ch2);
 }
 
-unsigned int MyModule::countOfConnections() {
+unsigned int BANGModule::countOfConnections() {
     unsigned int res = 0;
-    for (unsigned int i : *countConnections) {
-        res += i;
+    for (auto i : *connections) {
+        res += i->size();
     }
     return res;
-}
-
-cModule* MyModule::findModule(std::string &name) {
-    for (unsigned int i = 0; i < routers.size(); i++) {
-        if (strcmp(routers[i]->getFullName(), name.c_str()) == 0)
-            return routers[i];
-    }
-    return 0;
 }

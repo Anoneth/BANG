@@ -35,3 +35,7 @@
 out/
 MyModel
 MyModel_dbg
+BANG
+BANG_dbg
+.*
+src/results/

@@ -22,7 +22,8 @@ network MyNetwork
         int hostsPerRouter = default(10);
         int rndSeed = default(2122);
     submodules:
-        configurator[countOfNodes]: Ipv4NetworkConfigurator;
+        configurator0: Ipv4NetworkConfigurator;
+        configurator1: Ipv4NetworkConfigurator;
         myModules[countOfNodes]: MyModule;
     connections:
         for i=1..countOfNodes - 1 {
