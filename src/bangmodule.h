@@ -6,13 +6,8 @@ using namespace omnetpp;
 
 class BANGModule: public cSimpleModule {
 public:
-<<<<<<< HEAD:src/bangmodule.h
     BANGModule();
     ~BANGModule();
-=======
-    MyModule();
-    ~MyModule();
->>>>>>> 63eb855788ede925bf9a408230acdcbc798e9d98:src/mymodule.h
 protected:
     virtual int numInitStages() const override { return 15; }
     virtual void initialize(int stage) override;
@@ -28,23 +23,16 @@ private:
 
     std::vector<cDatarateChannel*> channels;
 
-<<<<<<< HEAD:src/bangmodule.h
-=======
     std::vector<int> *counts;
 
->>>>>>> 63eb855788ede925bf9a408230acdcbc798e9d98:src/mymodule.h
     unsigned int gateIt;
     unsigned int countOfNodes;
     unsigned int countOfRouters;
     unsigned int hostsPerRouter;
     unsigned int tmp;
 
-<<<<<<< HEAD:src/bangmodule.h
-    std::vector<std::vector<int>*> *connections;
     std::vector<unsigned int> *countConnections;
-=======
     bool **connections;
->>>>>>> 63eb855788ede925bf9a408230acdcbc798e9d98:src/mymodule.h
 
     void doStage0();
     void doStage1();

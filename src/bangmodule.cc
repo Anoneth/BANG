@@ -4,20 +4,22 @@ Define_Module(BANGModule);
 
 BANGModule::BANGModule() {
     channels = std::vector<cDatarateChannel*>();
-    connections = new std::vector<std::vector<int>*>();
     mods = new std::vector<cModule*>();
 
     configurators = std::vector<cModule*>();
 
-    countOfNodes =
-            getSimulation()->getModule(1)->par("countOfNodes").intValue();
-
     countOfRouters =
-            getSimulation()->getModule(1)->par("countOfRouters").intValue();
+            getSimulation()->getModule(1)->par("size").intValue();
     tmp = countOfNodes;
 
-    hostsPerRouter =
-            getSimulation()->getModule(1)->par("hostsPerRouter").intValue();
+    counts = new std::vector<int>(countOfRouters, 0);
+
+    connections = new bool*[countOfRouters];
+    for (int i = 0; i < countOfRouters; i++) {
+        connections[i] = new bool[countOfRouters];
+        for (int j = 0; j < countOfRouters; j++)
+            connections[i][j] = false;
+    }
 }
 
 BANGModule::~BANGModule() {
@@ -52,39 +54,19 @@ void BANGModule::initialize(int stage) {
 
 void BANGModule::doStage0() {
     createModules();
-    int c = getSimulation()->getActiveEnvir()->getParsimNumPartitions();
-    if (c == 0) {
-        createModule(CONFIGURATOR, "configurator");
-    }
-    for (int i = 0; i < c; i++) {
-        std::string name = "configurator";
-        name.append(
-                std::to_string(
-                        getSimulation()->getActiveEnvir()->getParsimProcId()));
-        createModule(CONFIGURATOR, name.c_str());
-    }
 }
 
 void BANGModule::doStage1() {
     gateIt = 0;
-    for (unsigned int i = 0; i < connections->size(); i++) {
+
+    for (int i = 0; i < countOfRouters; i++) {
         std::string name;
-        if (connections->at(i)->size() > 1) {
-            if (getSimulation()->getActiveEnvir()->getParsimNumPartitions()
-                    > 1) {
-                name = "node";
-                name.append(std::to_string(i % countOfNodes));
-            } else
-                name = "router";
+        if (counts->at(i) > 1) {
+            name = "router";
             name.append(std::to_string(i));
             createModule(ROUTER, name.c_str());
         } else {
-            if (getSimulation()->getActiveEnvir()->getParsimNumPartitions()
-                    > 1) {
-                name = "node";
-                name.append(std::to_string(i % countOfNodes));
-            } else
-                name = "host";
+            name = "host";
             name.append(std::to_string(i));
             createModule(HOST, name.c_str());
         }
@@ -92,26 +74,14 @@ void BANGModule::doStage1() {
 }
 
 void BANGModule::doStage2() {
-    for (unsigned int i = 0; i < countOfRouters; i++) {
-        for (unsigned int j = 0; j < connections->at(i)->size(); j++) {
-            int right = connections->at(i)->at(j);
-            //printf("from %i\tto %i\n", i, right);
-            if (i < right)
-                connectModules(mods->at(i), mods->at(right));
-        }
-    }
+    for (int i = 0; i < countOfRouters; i++)
+        for (int j = i; j < countOfRouters; j++)
+            if (connections[i][j])
+                connectModules(mods->at(i), mods->at(j));
 }
 
 void BANGModule::doStage3() {
     for (int t = 0; t < 15; t++) {
-        //configurator->callInitialize(t);
-        /*for (auto i : routers) {
-         i->callInitialize(t);
-         }
-
-         for (auto i : hosts) {
-         i->callInitialize(t);
-         }*/
 
         for (auto i : configurators) {
             i->callInitialize(t);
@@ -140,27 +110,28 @@ void BANGModule::addChannels(int count) {
 }
 
 void BANGModule::createModules() {
-    connections->push_back(new std::vector<int>());
-    connections->push_back(new std::vector<int>());
-    connections->at(0)->push_back(1);
-    connections->at(1)->push_back(0);
-    for (unsigned int i = 2; i < countOfRouters; i++) {
-        connections->push_back(new std::vector<int>());
+    connections[0][1] = true;
+    connections[1][0] = true;
+    int count = 2;
+    counts->at(0) = 1;
+    counts->at(1) = 1;
+    for (int i = 2; i < countOfRouters; i++) {
         bool isConnected = false;
-        for (unsigned int j = 0; (j < connections->size() - 1) && !isConnected;
-                j++) {
+        int j = 0;
+        for (j = 0; j < i; j++) {
             double c = uniform(0, 1);
-            double p = (double) connections->at(j)->size()
-                    / countOfConnections();
+            double p = (double) counts->at(j) / count;
             if (c < p) {
-                //isConnected = true;
-                connections->at(j)->push_back(i);
-                connections->at(i)->push_back(j);
+                isConnected = true;
+                connections[j][i] = true;
+                connections[i][j] = true;
+                counts->at(i) += 1;
+                counts->at(j) += 1;
+                count++;
             }
         }
         if (!isConnected) {
             i--;
-            connections->pop_back();
         }
     }
 }
@@ -228,8 +199,9 @@ void BANGModule::connectModules(cModule *f, cModule *s) {
 
 unsigned int BANGModule::countOfConnections() {
     unsigned int res = 0;
-    for (auto i : *connections) {
-        res += i->size();
-    }
+    for (int i = 0; i < countOfRouters; i++)
+        for (int j = 0; j < countOfRouters; j++)
+            if (connections[i][j])
+                res++;
     return res;
 }
