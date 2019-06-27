@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 ./MyModel_dbg -m -n ../simulations:.:../../inet4/src:../../inet4/examples:../../inet4/tutorials:../../inet4/showcases --image-path=../../inet4/images -l ../../inet4/src/INET testparallel.ini
+=======
+./MyModel_dbg -m -n ../simulations:.:../../inet4/src:../../inet4/examples:../../inet4/tutorials:../../inet4/showcases --image-path=../../inet4/images -l ../../inet4/src/INET omnetppModule.ini
+>>>>>>> 63eb855788ede925bf9a408230acdcbc798e9d98

@@ -1,5 +1,6 @@
 package mymodel;
 
+<<<<<<< HEAD
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.node.inet.Router;
 
@@ -24,5 +25,10 @@ network My2Network
             myModules[0].out++ --> {  delay = 100ms; } --> myModules[i].in++;
             myModules[0].in++ <-- {  delay = 100ms; } <-- myModules[i].out++;
         }
+=======
+simple MyModule
+{
+
+>>>>>>> 63eb855788ede925bf9a408230acdcbc798e9d98
 }
 
