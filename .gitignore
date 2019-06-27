@@ -35,10 +35,6 @@
 out/
 MyModel
 MyModel_dbg
-<<<<<<< HEAD
 BANG
-BANG_dbg
-.*
-=======
->>>>>>> 63eb855788ede925bf9a408230acdcbc798e9d98
+BANG_gbg
 src/results/
