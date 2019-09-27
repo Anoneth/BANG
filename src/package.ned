@@ -10,7 +10,7 @@ import inet.node.inet.Router;
 // TODO documentation
 //
 
-network My2Network
+network BANGNetwork
 {
     parameters:
         int countOfNodes = default(1);
@@ -22,8 +22,8 @@ network My2Network
         myModules[countOfNodes]: MyModule;
     connections:
         for i=1..countOfNodes - 1 {
-            myModules[0].out++ --> {  delay = 100ms; } --> myModules[i].in++;
-            myModules[0].in++ <-- {  delay = 100ms; } <-- myModules[i].out++;
+            BANGModules[0].out++ --> {  delay = 100ms; } --> BANGModules[i].in++;
+            BANGModules[0].in++ <-- {  delay = 100ms; } <-- BANGModules[i].out++;
         }
 =======
 simple MyModule

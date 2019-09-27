@@ -197,7 +197,7 @@ if parsim:
 
     printConnections()
 else:
-    outFile.write("\t\tmyModule: MyModule;\n")
+    outFile.write("\t\tBANGModule: BANGModule;\n")
 outFile.write("}\n")
 
 if parsim:
