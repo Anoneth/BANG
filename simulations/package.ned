@@ -1,3 +1,3 @@
-package mymodel.simulations;
+package bang.simulations;
 
 @license(LGPL);

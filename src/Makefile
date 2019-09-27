@@ -30,11 +30,6 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-<<<<<<< HEAD
-OBJS = $O/bangmodule.o
-=======
-OBJS = $O/mymodule.o
->>>>>>> 63eb855788ede925bf9a408230acdcbc798e9d98
 
 # Message files
 MSGFILES =
