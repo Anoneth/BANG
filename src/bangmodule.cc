@@ -9,7 +9,7 @@ BANGModule::BANGModule() {
     configurators = std::vector<cModule*>();
 
     countOfRouters =
-            getSimulation()->getModule(1)->par("size").intValue();
+            getSimulation()->getModule(1)->par("size").longValue();
     tmp = countOfNodes;
 
     counts = new std::vector<int>(countOfRouters, 0);
