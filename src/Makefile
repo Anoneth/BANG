@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for BANG
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -KINET4_PROJ=../../inet4 -DINET_IMPORT -L$$\(INET4_PROJ\)/src -lINET$$\(D\)
+#  opp_makemake -f --deep
 #
 
 # Name of target to be created (-o option)
@@ -22,7 +22,7 @@ INCLUDE_PATH =
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)$(INET4_PROJ)/src  -lINET$(D)
+LIBS =
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -30,15 +30,13 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
+OBJS = $O/bangmodule.o
 
 # Message files
 MSGFILES =
 
 # SM files
 SMFILES =
-
-# Other makefile variables (-K)
-INET4_PROJ=../../inet4
 
 #------------------------------------------------------------------------------
 
@@ -62,11 +60,8 @@ include $(CONFIGFILE)
 
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
-ifneq ($(TOOLCHAIN_NAME),clangc2)
-LIBS += -Wl,-rpath,$(abspath $(INET4_PROJ)/src)
-endif
 
-COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DINET_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
+COPTS = $(CFLAGS) $(IMPORT_DEFINES)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)
 SMCOPTS =
 

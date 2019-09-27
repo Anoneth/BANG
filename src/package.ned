@@ -1,4 +1,4 @@
-package mymodel;
+package bang;
 
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.node.inet.Router;
@@ -8,8 +8,12 @@ import inet.node.inet.Router;
 //
 // TODO documentation
 //
+simple BANGModule
+{
 
-network BANGNetwork
+}
+
+network BANGNetwork1
 {
     parameters:
         int countOfNodes = default(1);
@@ -25,8 +29,5 @@ network BANGNetwork
             BANGModules[0].in++ <-- {  delay = 100ms; } <-- BANGModules[i].out++;
         }
 }
-simple MyModule
-{
 
-}
 
