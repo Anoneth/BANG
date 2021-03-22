@@ -2,33 +2,37 @@
 
 Define_Module(BANGModule);
 
-BANGModule::BANGModule() {
-    channels = std::vector<cDatarateChannel*>();
-    mods = new std::vector<cModule*>();
+BANGModule::BANGModule()
+{
+    channels = std::vector<cDatarateChannel *>();
+    mods = new std::vector<cModule *>();
 
-    configurators = std::vector<cModule*>();
+    configurators = std::vector<cModule *>();
 
-    countOfRouters =
-            getSimulation()->getModule(1)->par("size").longValue();
+    countOfRouters = par("size").longValue();
     tmp = countOfNodes;
 
     counts = new std::vector<int>(countOfRouters, 0);
 
-    connections = new bool*[countOfRouters];
-    for (int i = 0; i < countOfRouters; i++) {
+    connections = new bool *[countOfRouters];
+    for (int i = 0; i < countOfRouters; i++)
+    {
         connections[i] = new bool[countOfRouters];
         for (int j = 0; j < countOfRouters; j++)
             connections[i][j] = false;
     }
 }
 
-BANGModule::~BANGModule() {
+BANGModule::~BANGModule()
+{
     finish();
 }
 
-void BANGModule::finish() {
+void BANGModule::finish()
+{
     cGate *gate;
-    for (unsigned int i = 0; i < channels.size(); i++) {
+    for (unsigned int i = 0; i < channels.size(); i++)
+    {
         gate = channels[i]->getSourceGate();
         if (gate != nullptr)
             gate->disconnect();
@@ -39,8 +43,10 @@ void BANGModule::finish() {
     delete connections;
 }
 
-void BANGModule::initialize(int stage) {
-    switch (stage) {
+void BANGModule::initialize(int stage)
+{
+    switch (stage)
+    {
     case 14:
         doStage0();
         doStage1();
@@ -52,20 +58,26 @@ void BANGModule::initialize(int stage) {
     }
 }
 
-void BANGModule::doStage0() {
+void BANGModule::doStage0()
+{
     createModules();
 }
 
-void BANGModule::doStage1() {
+void BANGModule::doStage1()
+{
     gateIt = 0;
 
-    for (int i = 0; i < countOfRouters; i++) {
+    for (int i = 0; i < countOfRouters; i++)
+    {
         std::string name;
-        if (counts->at(i) > 1) {
+        if (counts->at(i) > 1)
+        {
             name = "router";
             name.append(std::to_string(i));
             createModule(ROUTER, name.c_str());
-        } else {
+        }
+        else
+        {
             name = "host";
             name.append(std::to_string(i));
             createModule(HOST, name.c_str());
@@ -73,33 +85,41 @@ void BANGModule::doStage1() {
     }
 }
 
-void BANGModule::doStage2() {
+void BANGModule::doStage2()
+{
     for (int i = 0; i < countOfRouters; i++)
         for (int j = i; j < countOfRouters; j++)
             if (connections[i][j])
                 connectModules(mods->at(i), mods->at(j));
 }
 
-void BANGModule::doStage3() {
-    for (int t = 0; t < 15; t++) {
+void BANGModule::doStage3()
+{
+    for (int t = 0; t < 15; t++)
+    {
 
-        for (auto i : configurators) {
+        for (auto i : configurators)
+        {
             i->callInitialize(t);
         }
 
-        for (auto i : channels) {
+        for (auto i : channels)
+        {
             i->callInitialize(t);
         }
 
-        for (auto i : *mods) {
+        for (auto i : *mods)
+        {
             i->callInitialize(t);
         }
     }
 }
 
-void BANGModule::addChannels(int count) {
+void BANGModule::addChannels(int count)
+{
     cChannelType *channelType = cChannelType::get("inet.node.ethernet.Eth100M");
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++)
+    {
         cDatarateChannel *ch = channelType->createDatarateChannel("channel");
         ch->setDatarate(1e08);
         ch->setDelay(5e-08);
@@ -109,19 +129,23 @@ void BANGModule::addChannels(int count) {
     }
 }
 
-void BANGModule::createModules() {
+void BANGModule::createModules()
+{
     connections[0][1] = true;
     connections[1][0] = true;
     int count = 2;
     counts->at(0) = 1;
     counts->at(1) = 1;
-    for (int i = 2; i < countOfRouters; i++) {
+    for (int i = 2; i < countOfRouters; i++)
+    {
         bool isConnected = false;
         int j = 0;
-        for (j = 0; j < i; j++) {
+        for (j = 0; j < i; j++)
+        {
             double c = uniform(0, 1);
-            double p = (double) counts->at(j) / count;
-            if (c < p) {
+            double p = (double)counts->at(j) / count;
+            if (c < p)
+            {
                 isConnected = true;
                 connections[j][i] = true;
                 connections[i][j] = true;
@@ -130,16 +154,19 @@ void BANGModule::createModules() {
                 count++;
             }
         }
-        if (!isConnected) {
+        if (!isConnected)
+        {
             i--;
         }
     }
 }
 
-cModule* BANGModule::createModule(TYPE type, const char *name) {
+cModule *BANGModule::createModule(TYPE type, const char *name)
+{
     cModule *mod;
     cModuleType *moduleType;
-    switch (type) {
+    switch (type)
+    {
     case ROUTER:
         moduleType = cModuleType::get("inet.node.inet.Router");
         break;
@@ -148,18 +175,19 @@ cModule* BANGModule::createModule(TYPE type, const char *name) {
         break;
     case CONFIGURATOR:
         moduleType = cModuleType::get(
-                "inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator");
+            "inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator");
         break;
     default:
         moduleType = nullptr;
         break;
     }
 
-    mod = moduleType->create(name, getSimulation()->getModule(1));
+    mod = moduleType->create(name, getParentModule());
 
     mod->finalizeParameters();
 
-    switch (type) {
+    switch (type)
+    {
     case ROUTER:
         //routers.push_back(mod);
         mod->setGateSize("ethg", 1);
@@ -181,7 +209,8 @@ cModule* BANGModule::createModule(TYPE type, const char *name) {
     return mod;
 }
 
-void BANGModule::connectModules(cModule *f, cModule *s) {
+void BANGModule::connectModules(cModule *f, cModule *s)
+{
     addChannels(2);
 
     int fc = f->gateSize("ethg");
@@ -197,7 +226,8 @@ void BANGModule::connectModules(cModule *f, cModule *s) {
     s->gate("ethg$o", sc - 1)->connectTo(f->gate("ethg$i", fc - 1), ch2);
 }
 
-unsigned int BANGModule::countOfConnections() {
+unsigned int BANGModule::countOfConnections()
+{
     unsigned int res = 0;
     for (int i = 0; i < countOfRouters; i++)
         for (int j = 0; j < countOfRouters; j++)

@@ -111,11 +111,11 @@ else:
 
 def createConnection(one, two):
     t1 = ".ethg++"
-    if "treeLan" in one:
-        t1 = ".ethg"
+    #if "treeLan" in one:
+    #    t1 = ".ethg"
     t2 = ".ethg++"
-    if "treeLan" in two:
-        t2 = ".ethg"    
+    #if "treeLan" in two:
+    #    t2 = ".ethg"    
     conn.append(one + t1 + " <--> Eth100M <--> " + two + t2)
 
 
@@ -131,10 +131,10 @@ def printModules(modules):
         if "router" in i:
             outFile.write("\t\t" + i + ": Router;\n")
         else:
-            if parsim:
-                outFile.write("\t\t" + i + ": TreeNetwork;\n")
-            else:
-                outFile.write("\t\t" + i + ": StandardHost;\n")
+            #if parsim:
+            #    outFile.write("\t\t" + i + ": TreeNetwork;\n")
+            #else:
+            outFile.write("\t\t" + i + ": StandardHost;\n")
 
 
 def printConnections():
@@ -200,10 +200,10 @@ else:
     outFile.write("\t\tbang: BANG;\n")
 outFile.write("}\n")
 
-if parsim:
-    part = open("part.txt", "r")
-    t = part.read()
-    outFile.write(t)
+#if parsim:
+#    part = open("part.txt", "r")
+#    t = part.read()
+#    outFile.write(t)
 
 iniFile = open(iniFileName, "w")
 iniFile.write("[General]\n")
@@ -221,7 +221,7 @@ if parsim:
     for i in reversed(range(len(treeLans))):
         iniFile.write("**" + treeLans[i] + "**.partition-id = " + str(i % nodeCount) + "\n")
     iniFile.write("\n**.**.mac.address = \"auto\"\n")
-    iniFile.write("**.configurator[*].config = xmldoc(\"routes.xml\")\n")
+    #iniFile.write("**.configurator[*].config = xmldoc(\"routes.xml\")\n")
     iniFile.write("**.configurator[*].addStaticRoutes = true\n")
     iniFile.write("**.configurator[*].optimizeRoutes = false\n")
     iniFile.write("**.configurator[*].storeHostAddresses = true\n\n")

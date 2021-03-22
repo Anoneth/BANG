@@ -1,4 +1,4 @@
-package bang;
+package src;
 
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.node.inet.Router;

@@ -2,8 +2,6 @@
 #include <vector>
 #include <omnetpp.h>
 
-using namespace omnetpp;
-
 class BANGModule: public cSimpleModule {
 public:
     BANGModule();
