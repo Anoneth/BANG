@@ -8,7 +8,7 @@ packageName = ""
 parsim = False
 nodeCount = -1
 
-treeLans = []
+hosts = []
 
 def printHelp():
     print("--size\t\t\t\tnetwork size, positive number")
@@ -111,10 +111,10 @@ else:
 
 def createConnection(one, two):
     t1 = ".ethg++"
-    #if "treeLan" in one:
+    #if "host" in one:
     #    t1 = ".ethg"
     t2 = ".ethg++"
-    #if "treeLan" in two:
+    #if "host" in two:
     #    t2 = ".ethg"    
     conn.append(one + t1 + " <--> Eth100M <--> " + two + t2)
 
@@ -183,9 +183,9 @@ if parsim:
             name += str(i)
             mods.append(name)
         else:
-            name = "treeLan"
+            name = "host"
             name += str(i)
-            treeLans.append(name)
+            hosts.append(name)
             mods.append(name)
 
     for i in range(size):
@@ -215,27 +215,23 @@ if parsim:
     iniFile.write("parsim-communications-class = \"cMPICommunications\"\n")
     iniFile.write("parsim-synchronization-class = \"cNullMessageProtocol\"\n\n")
     iniFile.write("**router**.networkLayer.configurator.networkConfiguratorModule = \"configurator[0]\"\n")
-    for i in reversed(range(len(treeLans))):
-        iniFile.write("**" + treeLans[i] + "**.networkLayer.configurator.networkConfiguratorModule = \"configurator[" + str(i % nodeCount) + "]\"\n")
+    for i in reversed(range(len(hosts))):
+        iniFile.write("**" + hosts[i] + "**.networkLayer.configurator.networkConfiguratorModule = \"configurator[" + str(i % nodeCount) + "]\"\n")
     iniFile.write("\n**router**.partition-id = 0\n\n")
-    for i in reversed(range(len(treeLans))):
-        iniFile.write("**" + treeLans[i] + "**.partition-id = " + str(i % nodeCount) + "\n")
+    for i in reversed(range(len(hosts))):
+        iniFile.write("**" + hosts[i] + "**.partition-id = " + str(i % nodeCount) + "\n")
     iniFile.write("\n**.**.mac.address = \"auto\"\n")
-    #iniFile.write("**.configurator[*].config = xmldoc(\"routes.xml\")\n")
+    iniFile.write("**.configurator[*].config = xmldoc(\"src/config.xml\")\n")
     iniFile.write("**.configurator[*].addStaticRoutes = true\n")
     iniFile.write("**.configurator[*].optimizeRoutes = false\n")
     iniFile.write("**.configurator[*].storeHostAddresses = true\n\n")
-    iniFile.write("**.numUdpApps = 1\n**.udpApp[0].typename=\"UDPBackboneApp\"\n**.udpApp[*].destPort = 1\n**.udpApp[*].localPort = 1\n**.udpApp[*].messageLength = exponential(200B)\n**.udpApp[*].sendInterval = exponential(2.162162162162162e-05s)\n**.udpApp[*].startTime = 0\n**.udpApp[*].probabilitySendLocal = 0.0\n")
-    iniFile.write("**.h = 3\n")
-    iniFile.write("**.k = 3\n")
-    iniFile.write("**.numLeafHosts = 5\n")
-    iniFile.write("**.numInnerHosts = 3\n")
+    iniFile.write("**.numUdpApps = 1\n**.udpApp[0].typename=\"UDPBackboneApp\"\n**.udpApp[*].destPort = 1\n**.udpApp[*].localPort = 1\n**.udpApp[*].messageLength = exponential(200B)\n**.udpApp[*].sendInterval = exponential(1e-05s)\n**.udpApp[*].startTime = 0\n**.udpApp[*].probabilitySendLocal = 0.0\n")
 else:
     iniFile.write("**.size = " + str(size) + "\n")
 
 
 for i in reversed(range(nodeCount)):
-    iniFile.write("**configurator[" + str(i) + "].partition-id = " +str(i) + "\n")
+    iniFile.write("**configurator[" + str(i) + "].partition-id = " + str(i) + "\n")
 
 if not parsim:
     iniFile.write("**host*.numApps = 1\n")
@@ -257,11 +253,22 @@ for i in range(size):
     out.write(st)
     
 if parsim:
-    routes = open("routes.xml", "w")
+    routes = open("config.xml", "w")
     routes.write("<config>\n")
-    routes.write("\t<interface hosts='*.router*' address='10.x.x.x' netmask='255.x.x.x'/>\n")
-    for i in range(len(treeLans)):
-        routes.write("\t<interface hosts='*" + treeLans[i] + ".**' address='" + str(11 + i) + ".x.x.x' netmask='255.x.x.x'/>\n")
+    routes.write("\t<interface hosts='**router**' address='10.1.0.x' netmask='255.255.255.x'/>\n")
+    for i in range(len(hosts)):
+        '''
+        routes.write("\t<interface hosts='**" + hosts[i] + "**' address='10." + 
+                    str((i // 255 * 255) % (255 * 255)) + "." + 
+                    str((i // 255) % 255) + "." + str(i % 255) + 
+                    "' netmask='255.255." + 
+                    str((mask // 255) ^ 255) + "." + 
+                    str(mask ^ 255) + "'/>\n")
+        '''
+        routes.write("\t<interface hosts='**" + hosts[i] + "**' address='10." + 
+                    str(i // 255 % 255) + "." + 
+                    str(i % 255) + "." + str(i % 255) + 
+                    "' netmask='255.255.255.x'/>\n")
     routes.write("</config>")
 
 print("Complete!")
