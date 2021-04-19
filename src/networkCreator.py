@@ -1,5 +1,7 @@
 import sys
 import random
+import networkx as nx
+import numpy as np
 
 size = -1
 networkName = ""
@@ -9,6 +11,9 @@ parsim = False
 nodeCount = -1
 
 hosts = []
+traffic_pairs = []
+edge_nodes = []
+hosts_ip = []
 
 def printHelp():
     print("--size\t\t\t\tnetwork size, positive number")
@@ -100,23 +105,18 @@ else:
 outFile.write("\n\n")
 outFile.write("network " + networkName)
 outFile.write("\n{\n")
+outFile.write("\tparameters:\n")
+outFile.write("\t\tint nodeCount = default(2);\n")
 if not parsim:
-    outFile.write("\tparameters:\n")
     outFile.write("\t\tint size = default(3);\n")
 outFile.write("\tsubmodules:\n")
 if not parsim:
     outFile.write("\t\tconfigurator: Ipv4NetworkConfigurator;\n")
 else:
-    outFile.write("\t\tconfigurator[" + str(nodeCount) + "]: IPv4NetworkConfigurator;\n")
+    outFile.write("\t\tconfigurator[nodeCount]: IPv4NetworkConfigurator;\n")
 
-def createConnection(one, two):
-    t1 = ".ethg++"
-    #if "host" in one:
-    #    t1 = ".ethg"
-    t2 = ".ethg++"
-    #if "host" in two:
-    #    t2 = ".ethg"    
-    conn.append(one + t1 + " <--> Eth100M <--> " + two + t2)
+def createConnection(left, right): 
+    conn.append(left + ".ethg++ <--> Eth100M <--> " + right + ".ethg++")
 
 
 def countConnections():
@@ -131,9 +131,6 @@ def printModules(modules):
         if "router" in i:
             outFile.write("\t\t" + i + ": Router;\n")
         else:
-            #if parsim:
-            #    outFile.write("\t\t" + i + ": TreeNetwork;\n")
-            #else:
             outFile.write("\t\t" + i + ": StandardHost;\n")
 
 
@@ -175,7 +172,7 @@ if parsim:
             i -= 1
         i += 1
 
-
+    
     for i in range(size):
         name = ""
         if tt[i] > 1:
@@ -183,15 +180,29 @@ if parsim:
             name += str(i)
             mods.append(name)
         else:
-            name = "host"
-            name += str(i)
-            hosts.append(name)
-            mods.append(name)
+            mods.append("edge_router" + str(i))
+            edge_nodes.append(i)
+
+    
+    for i in range(len(edge_nodes) // 2):
+        left = edge_nodes[random.randint(0, len(edge_nodes) - 1)]
+        right = edge_nodes[random.randint(0, len(edge_nodes) - 1)]
+        traffic_pairs.append([left, right])
 
     for i in range(size):
         for j in range(i, size):
             if connections[i][j] == 1:
                 createConnection(mods[i], mods[j])
+
+    for i in edge_nodes:
+        count = random.randint(1, 5)
+        for j in range(count):
+            name = "host" + str(i) + "_" + str(j)
+            mods.append(name)
+            hosts.append(name)
+            createConnection(mods[i], name)
+            ip = "10." + str(i % 255) + "." + str(j % 255) + ".1"
+            hosts_ip.append([name, ip])
             
     printModules(mods)
 
@@ -213,27 +224,128 @@ iniFile.write("\n\n")
 if parsim:
     iniFile.write("parallel-simulation = true\n")
     iniFile.write("parsim-communications-class = \"cMPICommunications\"\n")
-    iniFile.write("parsim-synchronization-class = \"cNullMessageProtocol\"\n\n")
-    iniFile.write("**router**.networkLayer.configurator.networkConfiguratorModule = \"configurator[0]\"\n")
-    for i in reversed(range(len(hosts))):
-        iniFile.write("**" + hosts[i] + "**.networkLayer.configurator.networkConfiguratorModule = \"configurator[" + str(i % nodeCount) + "]\"\n")
-    iniFile.write("\n**router**.partition-id = 0\n\n")
-    for i in reversed(range(len(hosts))):
-        iniFile.write("**" + hosts[i] + "**.partition-id = " + str(i % nodeCount) + "\n")
+    iniFile.write("parsim-synchronization-class = \"cNoSynchronization\"\n\n")
     iniFile.write("\n**.**.mac.address = \"auto\"\n")
-    iniFile.write("**.configurator[*].config = xmldoc(\"src/config.xml\")\n")
+    
+    iniFile.write("**.configurator[*].config = xmldoc(\"src/" + networkName + ".xml\")\n")
     iniFile.write("**.configurator[*].addStaticRoutes = true\n")
     iniFile.write("**.configurator[*].optimizeRoutes = false\n")
     iniFile.write("**.configurator[*].storeHostAddresses = true\n\n")
-    iniFile.write("**.numUdpApps = 1\n**.udpApp[0].typename=\"UDPBackboneApp\"\n**.udpApp[*].destPort = 1\n**.udpApp[*].localPort = 1\n**.udpApp[*].messageLength = exponential(200B)\n**.udpApp[*].sendInterval = exponential(1e-05s)\n**.udpApp[*].startTime = 0\n**.udpApp[*].probabilitySendLocal = 0.0\n")
+    iniFile.write("**.numUdpApps = 1\n**.udpApp[0].typename=\"UDPBackboneApp\"\n**.udpApp[*].destPort = 1\n**.udpApp[*].localPort = 1\n**.udpApp[*].messageLength = exponential(200B)\n**.udpApp[*].sendInterval = exponential(1e-03s)\n**.udpApp[*].startTime = 0\n**.udpApp[*].probabilitySendLocal = 0.0\n")
+
+    addresses = [""] * size
+
+    unique = set()
+    for i in traffic_pairs:
+        unique.add(i[0])
+        unique.add(i[1])
+        for j in hosts_ip:
+            if j[0].startswith("host" + str(i[1]) + "_"):
+                addresses[i[0]] += j[1] + " "
+            if j[0].startswith("host" + str(i[0]) + "_"):
+                addresses[i[1]] += j[1] + " "
+
+
+    for i in unique:
+        iniFile.write("**.host" + str(i) + "_**.udpApp[*].destAddresses = \"")
+        iniFile.write(addresses[i])
+        iniFile.write("\"\n")
+
+
+    adj_matr = np.matrix(connections)
+    graph = nx.from_numpy_matrix(adj_matr)
+    t = [[]] * size
+
+    traffic_groups = [set()]
+    traffic_groups[0].add(traffic_pairs[0][0])
+    traffic_groups[0].add(traffic_pairs[0][1])
+    for i in range(1, len(traffic_pairs)):
+        j = 0
+        flag = True
+        while j < len(traffic_groups) and flag:
+            tmp = traffic_pairs[i]
+            tmp2 = traffic_groups[j]
+            if tmp[0] in tmp2 or tmp[1] in tmp2:
+                traffic_groups[j].add(tmp[0])
+                traffic_groups[j].add(tmp[1])
+                flag = False
+            j += 1
+        if flag:
+            tmp3 = set()
+            tmp3.add(tmp[0])
+            tmp3.add(tmp[1])
+            traffic_groups.append(tmp3)
+                                
+        else:
+            flag = True
+            while flag:
+                k = 0
+                while k < len(traffic_groups):
+                    l = k + 1
+                    while l < len(traffic_groups):
+                        m = 0
+                        tmp3 = list(traffic_groups[k])
+                        while m < len(tmp3):
+                            if tmp3[m] in traffic_groups[l]:
+                                for n in traffic_groups[l]:
+                                    traffic_groups[k].add(n)
+                                traffic_groups.pop(l)
+                                break
+                            m += 1
+                        if m < len(traffic_groups[k]):
+                            break
+                        l += 1
+                    if l < len(traffic_groups):
+                        break
+                    k += 1
+                if k == len(traffic_groups):
+                    flag = False
+    print("Optimal node count: " + str(len(traffic_groups)))
+
+    for i in traffic_pairs:
+        path = nx.shortest_path(graph, source=i[0], target=i[1])
+
+    host_groups = set()
+    for i in hosts:
+        host_groups.add(i.split("_")[0])
+    host_groups_list = list(host_groups)
+    
+    
+    iniFile.write(networkName + ".nodeCount=" + str(len(traffic_groups)) + "\n")
+    for i in range(len(traffic_groups)):
+        iniFile.write("**configurator[" + str(i) + "].partition-id = " + str(i) + "\n")
+    
+    for i in range(len(host_groups_list)):
+        node = 0
+        index = int(host_groups_list[i][4:])
+        j = 0
+        while j < len(traffic_groups):
+            if index in traffic_groups[j]:
+                node = j
+                break
+            j += 1
+        iniFile.write("**" + host_groups_list[i] + "**.networkLayer.configurator.networkConfiguratorModule = \"configurator[" + str(node) + "]\"\n")
+        iniFile.write("**" + host_groups_list[i] + "**.partition-id=" + str(node) + "\n\n")
+        iniFile.write("**edge_router" + str(index) + "**.networkLayer.configurator.networkConfiguratorModule = \"configurator[" + str(node) + "]\"\n")
+        iniFile.write("**edge_router" + str(index) + "**.partition-id=" + str(node) + "\n\n")
+
+    
+    iniFile.write("\n**router**.partition-id = 0\n\n")
+    iniFile.write("**router**.networkLayer.configurator.networkConfiguratorModule = \"configurator[0]\"\n")
+    
+    routes = open(networkName + ".xml", "w")
+    routes.write("<config>\n")
+    for i in range(size):
+        routes.write("\t<interface hosts='**router" + str(i) + 
+                    "' address='11." + str(i // 256) + "." + str(i % 256) + ".x' netmask='255.255.255.x'/>\n")
+    for i in hosts_ip:
+        routes.write("\t<interface hosts='" + i[0] + 
+                    "' address='" + i[1] + 
+                    "' netmask='255.255.255.x'/>\n")
+    routes.write("</config>")
+
 else:
     iniFile.write("**.size = " + str(size) + "\n")
-
-
-for i in reversed(range(nodeCount)):
-    iniFile.write("**configurator[" + str(i) + "].partition-id = " + str(i) + "\n")
-
-if not parsim:
     iniFile.write("**host*.numApps = 1\n")
     iniFile.write("**host*.app[0].typename = \"UdpBasicApp\"\n")
     iniFile.write("**host*.app[0].localPort = 32344\n")
@@ -253,22 +365,16 @@ for i in range(size):
     out.write(st)
     
 if parsim:
-    routes = open("config.xml", "w")
-    routes.write("<config>\n")
-    routes.write("\t<interface hosts='**router**' address='10.1.0.x' netmask='255.255.255.x'/>\n")
-    for i in range(len(hosts)):
-        '''
-        routes.write("\t<interface hosts='**" + hosts[i] + "**' address='10." + 
-                    str((i // 255 * 255) % (255 * 255)) + "." + 
-                    str((i // 255) % 255) + "." + str(i % 255) + 
-                    "' netmask='255.255." + 
-                    str((mask // 255) ^ 255) + "." + 
-                    str(mask ^ 255) + "'/>\n")
-        '''
-        routes.write("\t<interface hosts='**" + hosts[i] + "**' address='10." + 
-                    str(i // 255 % 255) + "." + 
-                    str(i % 255) + "." + str(i % 255) + 
-                    "' netmask='255.255.255.x'/>\n")
-    routes.write("</config>")
+    
+
+    pairs = open("pairs.txt", "w")
+    for i in traffic_pairs:
+        pairs.write(str(i[0]) + " " + str(i[1]) + "\n")
+    pairs.close()
+
+    ips = open("ips.txt", "w")
+    for i in hosts_ip:
+        ips.write(i[0] + ": " + i[1] + "\n")
+    ips.close()
 
 print("Complete!")
